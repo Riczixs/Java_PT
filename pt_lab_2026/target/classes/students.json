@@ -1,0 +1,78 @@
+{
+  "students": [
+    {
+      "name": "Alicja", "age": 20, "gender": "female", "instrument": "Piano", "yearsOfStudy": 7,
+      "colleagues": [
+        {
+          "name": "Marek", "age": 19, "gender": "male", "instrument": "Violin", "yearsOfStudy": 5,
+          "colleagues": [
+            { "name": "Zofia", "age": 22, "gender": "female", "instrument": "Flute", "yearsOfStudy": 3,"colleagues": [] },
+            { "name": "Jakub", "age": 21, "gender": "male", "instrument": "Saxophone", "yearsOfStudy": 6,"colleagues": [] },
+            { "name": "Hanna", "age": 20, "gender": "female", "instrument": "Oboe", "yearsOfStudy": 4,"colleagues": [] }
+          ]
+        },
+        {
+          "name": "Karolina", "age": 23, "gender": "female", "instrument": "Cello", "yearsOfStudy": 8,
+          "colleagues": [
+            { "name": "Mateusz", "age": 18, "gender": "male", "instrument": "Trumpet", "yearsOfStudy": 2,"colleagues": [] },
+            { "name": "Piotr", "age": 25, "gender": "male", "instrument": "Double Bass", "yearsOfStudy": 10,"colleagues": [] },
+            { "name": "Marta", "age": 19, "gender": "female", "instrument": "Clarinet", "yearsOfStudy": 5,"colleagues": [] }
+          ]
+        },
+        {
+          "name": "Tomasz", "age": 24, "gender": "male", "instrument": "Trombone", "yearsOfStudy": 7,
+          "colleagues": [
+            { "name": "Julia", "age": 21, "gender": "female", "instrument": "Harp", "yearsOfStudy": 6,"colleagues": [] },
+            { "name": "Adam", "age": 22, "gender": "male", "instrument": "Classical Guitar", "yearsOfStudy": 9,"colleagues": [] },
+            { "name": "Natalia", "age": 20, "gender": "female", "instrument": "Viola", "yearsOfStudy": 4,"colleagues": [] }
+          ]
+        },
+        {
+          "name": "Bartosz", "age": 19, "gender": "male", "instrument": "Percussion", "yearsOfStudy": 3,
+          "colleagues": [
+            { "name": "Magdalena", "age": 23, "gender": "female", "instrument": "Bassoon", "yearsOfStudy": 7,"colleagues": [] },
+            { "name": "Szymon", "age": 21, "gender": "male", "instrument": "French Horn", "yearsOfStudy": 5,"colleagues": [] },
+            { "name": "Weronika", "age": 18, "gender": "female", "instrument": "Piano", "yearsOfStudy": 2,"colleagues": [] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Marek", "age": 19, "gender": "male", "instrument": "Violin", "yearsOfStudy": 5,
+      "colleagues": [
+        {
+          "name": "Alicja", "age": 20, "gender": "female", "instrument": "Piano", "yearsOfStudy": 7,
+          "colleagues": [
+            { "name": "Julia", "age": 21, "gender": "female", "instrument": "Harp", "yearsOfStudy": 6,"colleagues": [] },
+            { "name": "Adam", "age": 22, "gender": "male", "instrument": "Classical Guitar", "yearsOfStudy": 9,"colleagues": [] },
+            { "name": "Natalia", "age": 20, "gender": "female", "instrument": "Viola", "yearsOfStudy": 4,"colleagues": [] }
+          ]
+        },
+        {
+          "name": "Zofia", "age": 22, "gender": "female", "instrument": "Flute", "yearsOfStudy": 3,
+          "colleagues": [
+            { "name": "Marta", "age": 19, "gender": "female", "instrument": "Clarinet", "yearsOfStudy": 5,"colleagues": [] },
+            { "name": "Tomasz", "age": 24, "gender": "male", "instrument": "Trombone", "yearsOfStudy": 7,"colleagues": [] },
+            { "name": "Hanna", "age": 20, "gender": "female", "instrument": "Oboe", "yearsOfStudy": 4,"colleagues": [] }
+          ]
+        },
+        {
+          "name": "Jakub", "age": 21, "gender": "male", "instrument": "Saxophone", "yearsOfStudy": 6,
+          "colleagues": [
+            { "name": "Magdalena", "age": 23, "gender": "female", "instrument": "Bassoon", "yearsOfStudy": 7,"colleagues": [] },
+            { "name": "Szymon", "age": 21, "gender": "male", "instrument": "French Horn", "yearsOfStudy": 5,"colleagues": [] },
+            { "name": "Weronika", "age": 18, "gender": "female", "instrument": "Piano", "yearsOfStudy": 2,"colleagues": [] }
+          ]
+        },
+        {
+          "name": "Łukasz", "age": 26, "gender": "male", "instrument": "Organ", "yearsOfStudy": 12,
+          "colleagues": [
+            { "name": "Oliwia", "age": 20, "gender": "female", "instrument": "Accordion", "yearsOfStudy": 4, "colleagues": [] },
+            { "name": "Kamil", "age": 22, "gender": "male", "instrument": "Tuba", "yearsOfStudy": 6,"colleagues": [] },
+            { "name": "Robert", "age": 21, "gender": "male", "instrument": "Cello", "yearsOfStudy": 5,"colleagues": [] }
+          ]
+        }
+      ]
+    }
+  ]
+}
