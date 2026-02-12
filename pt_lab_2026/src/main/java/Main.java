@@ -7,9 +7,9 @@ public class Main {
         System.out.println("Shutting down executor...");
         executor.shutdown();
         try{
-            if(!executor.awaitTermination(60, TimeUnit.SECONDS)){
+            if(!executor.awaitTermination(2, TimeUnit.SECONDS)){
                 executor.shutdownNow();
-                if(!executor.awaitTermination(60, TimeUnit.SECONDS)){
+                if(!executor.awaitTermination(2, TimeUnit.SECONDS)){
                     System.err.println("Executor did not terminate");
                 }
             }
@@ -20,7 +20,7 @@ public class Main {
         System.out.println("Executor shut down Correctly!");
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
         int thread_count = Integer.parseInt(args[0]);
         Scanner sc = new Scanner(System.in);
         //Synchronized resource Set
@@ -34,15 +34,32 @@ public class Main {
         }
         for (Computation resource : resources) {
             Future<Computation> f = executor.submit(new PrimeFib(resource));
-            results.add(f);
+            results.add(f.get());
         }
-        try{
-            if(executor.awaitTermination(10,TimeUnit.SECONDS)){
-                shutDownExecutor(executor);
-                results.printResults();
+        System.out.println("Basic tasks completed.");
+        while(true){
+            if(sc.hasNextLine()){
+                String res = sc.nextLine();
+                if(res.equals("end")){
+                    shutDownExecutor(executor);
+                    break;
+                }else{
+                    int a = sc.nextInt();
+                    int b = sc.nextInt();
+                    if(a>b){
+                        int temp = a;
+                        a = b;
+                        b = temp;
+                    }
+                    Future<Computation> f =  executor.submit(new PrimeFib(new Computation(a,b)));
+                    results.add(f.get());
+                    System.out.println("New computation has been added!");
+                }
             }
-        }catch(InterruptedException e){
-            executor.shutdownNow();
         }
+
+        shutDownExecutor(executor);
+        results.printResults();
+
     }
 }

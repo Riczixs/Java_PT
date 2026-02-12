@@ -25,5 +25,8 @@ public class Computation {
     public int getEnd() {
         return end;
     }
+    public String toString(){
+        return "Range "+"[ "+start+", "+end+" ]" + "has " + result + " prime numbers.";
+    }
 }
 

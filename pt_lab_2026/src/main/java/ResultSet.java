@@ -4,17 +4,17 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 public class ResultSet {
-    private Set<Future<Computation>> results = Collections.synchronizedSet(new HashSet<>());
+    private Set<Computation> results = Collections.synchronizedSet(new HashSet<>());
 
-    public void add(Future<Computation> c) {
+    public void add(Computation c) {
+        System.out.println("Adding result => " + c.getResult());
         synchronized (results) {
             results.add(c);
         }
     }
     public void printResults() {
         synchronized (results) {
-            results.forEach(System.out::println);
+            results.forEach(c -> System.out.println(c.toString()));
         }
     }
-
 }
