@@ -1,24 +1,51 @@
 package model;
 
-import java.util.*;
-public class Student extends Person implements Comparable<Student>{
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.hibernate.SessionFactory;
 
+import java.util.*;
+
+@Entity
+@Getter
+@Setter
+@Table(name = "students")
+@NoArgsConstructor
+public class Student implements Comparable<Student>{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    @Column(nullable = false)
+    private String name;
+    private Integer age;
+    private String gender;
     private String instrument;
     private Integer yearOfStudy;
-    private Set<Student> colleagues;
-    public Student() {}
-    public Student(String name, Integer age, String gender, String instrument, Integer yearOfStudy) {
-        super(name, age, gender);
+    @ManyToOne
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
+
+    public Student(Integer id, String name, Integer age, String gender, String instrument, Integer yearOfStudy, Teacher teacher) {
+        this.id = id;
+        this.name = name;
+        this.gender = gender;
+        this.age = age;
         this.instrument = instrument;
         this.yearOfStudy = yearOfStudy;
-    }
-    public Student(String name, Integer age, String gender, String instrument, Integer yearOfStudy, Set<Student> colleagues) {
-        super(name, age, gender);
-        this.instrument = instrument;
-        this.yearOfStudy = yearOfStudy;
-        this.colleagues = colleagues;
+        this.teacher = teacher;
     }
 
+
+    //    @ManyToOne
+//    @JoinColumn(name = "teacher_id") //choosing which column of Teacher entity
+//    private Teacher teacher;
+    /*
+    * @Equals obj has the same hashCode
+    * @HashCode is made of un-mutable fields only
+    * */
     @Override
     public boolean equals(Object o) {
         if(this == o) return true;
@@ -26,17 +53,13 @@ public class Student extends Person implements Comparable<Student>{
         return getInstrument().equals(((Student) o).getInstrument())
                 && getYearOfStudy().equals(((Student) o).getYearOfStudy())
                 && getName().equals(((Student) o).getName())
-                && getAge()==((Student) o).getAge()
+                && getAge().equals(((Student) o).getAge())
                 && getGender().equals(((Student) o).getGender())
                 ;
     }
-    /*
-    * @Equals obj has the same hashCode
-    * @HashCode is made of un-mutable fields only
-    * */
     @Override
     public int hashCode(){
-        return (this.instrument + this.getName() + this.getGender()).hashCode(); //only un-mutable fields
+        return (this.getInstrument() + this.getName() + this.getGender()).hashCode(); //only un-mutable fields
     }
     @Override
     public int compareTo(Student o) {
@@ -44,43 +67,6 @@ public class Student extends Person implements Comparable<Student>{
         if(!this.getYearOfStudy().equals(o.getYearOfStudy())) return this.getYearOfStudy().compareTo(o.getYearOfStudy());
         return this.getInstrument().compareTo(o.getInstrument());
     }
-
-
-    public int printStudents(String prefix) {
-        int tmpCounter = 0;
-        if(getColleagues().isEmpty()) return tmpCounter;
-        for(Student student : getColleagues()) {
-            System.out.println(prefix + student);
-            tmpCounter += 1;
-            tmpCounter += student.printStudents((prefix + "<>"));
-        }
-        return tmpCounter;
-    }
-
-    public String getInstrument() {
-        return instrument;
-    }
-
-    public void setInstrument(String instrument) {
-        this.instrument = instrument;
-    }
-
-    public Integer getYearOfStudy() {
-        return yearOfStudy;
-    }
-
-    public void setYearOfStudy(Integer yearOfStudy) {
-        this.yearOfStudy = yearOfStudy;
-    }
-
-    public Set<Student> getColleagues() {
-        return colleagues;
-    }
-
-    public void setColleagues(Set<Student> colleagues) {
-        this.colleagues = colleagues;
-    }
-
     @Override
     public String toString() {
         return "Student => {" +

@@ -1,24 +1,38 @@
 package model;
 
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-public class Teacher extends Person implements Comparator<Teacher>, Comparable<Teacher>{
-
+@Entity
+@Getter
+@Setter
+@Table(name = "teachers")
+@NoArgsConstructor
+public class Teacher implements Comparator<Teacher>, Comparable<Teacher>{
+    @Id
+    private Integer id;
+    private String name;
+    private Integer age;
+    private String gender;
     private String specialization;
+    @Column(name="years_of_work")
     private Integer yearsOfWork;
-    private Set<Student> students;
 
-    public Teacher(){
-        super();
-    };
-    public Teacher(String name, Integer age, String gender, String specialization, Integer yearsOfWork) {
-        super(name, age, gender);
+    public Teacher(Integer id, String name, Integer age, String gender, String specialization, Integer yearsOfWork) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
         this.specialization = specialization;
         this.yearsOfWork = yearsOfWork;
-        this.students = new HashSet<>();
+        this.students = new ArrayList<>();
     }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher")
+    private List<Student> students;
 
     @Override
     public boolean equals(Object o) {
@@ -57,27 +71,15 @@ public class Teacher extends Person implements Comparator<Teacher>, Comparable<T
         return (o1.getAge() > o.getAge()) ? 1 : -1;
     }
 
-    public String getSpecialization() {
-        return specialization;
-    }
-
-    public Integer getYearsOfWork() {
-        return yearsOfWork;
-    }
-
-    public void setYearsOfWork(Integer yearsOfWork) {
-        this.yearsOfWork = yearsOfWork;
-    }
-
-    public void setSpecialization(String specialization) {
-        this.specialization = specialization;
-    }
-
-    public Set<Student> getStudents() {
-        return students;
-    }
-
-    public void setStudents(Set<Student> students) {
-        this.students = students;
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", gender='" + gender + '\'' +
+                ", specialization='" + specialization + '\'' +
+                ", yearsOfWork=" + yearsOfWork +
+                '}';
     }
 }
