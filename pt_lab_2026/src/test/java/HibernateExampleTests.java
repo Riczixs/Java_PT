@@ -7,7 +7,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import java.util.*;
 public class HibernateExampleTests {
 
     private SessionFactory sessionFactory;
@@ -32,17 +32,27 @@ public class HibernateExampleTests {
         }
     }
 
-
-
+    @Test
+    public void should_fetch_all_teachers(){
+        try{
+            Session session = sessionFactory.openSession();
+            session.beginTransaction();
+            session.persist(new Teacher("Franek", 10, "woman", "Saxophone", 1));
+            session.persist(new Teacher("Rysiek", 21, "man", "Piano", 2));
+            List<Teacher> teachers = session.createQuery("from Teacher", Teacher.class).list();
+            teachers.forEach(System.out::println);
+            session.getTransaction().commit();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     @Test
     public void save_test_object_to_db() {
         Teacher teacher = new Teacher();
         try(Session session = sessionFactory.openSession()){
             session.beginTransaction();
-
             session.persist(teacher);
-
             session.getTransaction().commit();
         }
 

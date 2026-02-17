@@ -24,12 +24,11 @@ public class Student implements Comparable<Student>{
     private String gender;
     private String instrument;
     private Integer yearOfStudy;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    public Student(Integer id, String name, Integer age, String gender, String instrument, Integer yearOfStudy, Teacher teacher) {
-        this.id = id;
+    public Student(String name, Integer age, String gender, String instrument, Integer yearOfStudy, Teacher teacher) {
         this.name = name;
         this.gender = gender;
         this.age = age;
@@ -74,7 +73,8 @@ public class Student implements Comparable<Student>{
                 "age= " + getAge() + " <> " +
                 "gender= " + getGender() + " <> " +
                 "instrument= " + instrument + " <> " +
-                "yearOfStudy= " + yearOfStudy +
+                "yearOfStudy= " + yearOfStudy + " <> \n" +
+                "teacher= " + teacher.toString() +
                 '}';
     }
 }

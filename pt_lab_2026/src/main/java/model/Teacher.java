@@ -13,6 +13,7 @@ import java.util.*;
 @NoArgsConstructor
 public class Teacher implements Comparator<Teacher>, Comparable<Teacher>{
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private Integer age;
@@ -21,8 +22,7 @@ public class Teacher implements Comparator<Teacher>, Comparable<Teacher>{
     @Column(name="years_of_work")
     private Integer yearsOfWork;
 
-    public Teacher(Integer id, String name, Integer age, String gender, String specialization, Integer yearsOfWork) {
-        this.id = id;
+    public Teacher(String name, Integer age, String gender, String specialization, Integer yearsOfWork) {
         this.name = name;
         this.age = age;
         this.gender = gender;
