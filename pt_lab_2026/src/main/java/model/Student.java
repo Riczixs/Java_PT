@@ -69,12 +69,12 @@ public class Student implements Comparable<Student>{
     @Override
     public String toString() {
         return "Student => {" +
+                "id= " + getId() + " <> " +
                 "name= " + getName() + " <> " +
                 "age= " + getAge() + " <> " +
                 "gender= " + getGender() + " <> " +
-                "instrument= " + instrument + " <> " +
-                "yearOfStudy= " + yearOfStudy + " <> \n" +
-                "teacher= " + teacher.toString() +
+                "instrument= " + getInstrument() + " <> " +
+                "yearOfStudy= " + getYearOfStudy() +
                 '}';
     }
 }

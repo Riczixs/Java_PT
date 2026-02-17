@@ -8,11 +8,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import java.io.*;
-import java.sql.*;
 import java.util.*;
 
 public class Main {
-    public static int type;
     private static final SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
     private static final ObjectMapper mapper = new ObjectMapper();
     private static List<Student> students = new ArrayList<>();
@@ -45,27 +43,29 @@ public class Main {
         session.beginTransaction();
         //Teachers
         JsonNode json = mapper.readTree(new File(ClassLoader.getSystemResource("teachers.json").getPath()));
-        for(JsonNode node:json){
-            Teacher teacher =new Teacher(node.get("name").asText(), node.get("age").asInt(),
-                    node.get("gender").asText(), node.get("specialization").asText(), node.get("yearsOfWork").asInt());
-            session.persist(teacher);
-            teachers.put(teacher.getId(), teacher);
+        if(session.createQuery("select t from Teacher t").list().isEmpty()){
+            for(JsonNode node:json){
+                Teacher teacher =new Teacher(node.get("name").asText(), node.get("age").asInt(),
+                        node.get("gender").asText(), node.get("specialization").asText(), node.get("yearsOfWork").asInt());
+                session.persist(teacher);
+                teachers.put(teacher.getId(), teacher);
+            }
+            List<Teacher> t = session.createQuery("select t from Teacher t", Teacher.class).list();
+            Iterator<Teacher> iterator = teachers.values().iterator();
         }
-        List<Teacher> t = session.createQuery("select t from Teacher t", Teacher.class).list();
-        Iterator<Teacher> iterator = teachers.values().iterator();
-        iterator.forEachRemaining(System.out::println);
         //Students
         json = mapper.readTree(new File(ClassLoader.getSystemResource("students.json").getPath()));
-        for(JsonNode node:json){
-            Integer id = node.get("teacher").asInt();
-            session.setProperty("id", id);
-            Teacher teacher = session.createQuery("select t from Teacher t where t.id = :id", Teacher.class).setParameter("id", id).uniqueResult();
-            session.persist(new Student(node.get("name").asText(), node.get("age").asInt(),
-                    node.get("gender").asText(), node.get("instrument").asText(), node.get("yearsOfStudy").asInt(), teacher));
+        if(session.createQuery("select s from Student s").list().isEmpty()){
+            for(JsonNode node:json){
+                Integer id = node.get("teacher").asInt();
+                Teacher teacher = session.createQuery("select t from Teacher t where t.id = :id", Teacher.class).setParameter("id", id).uniqueResult();
+                session.persist(new Student(node.get("name").asText(), node.get("age").asInt(),
+                        node.get("gender").asText(), node.get("instrument").asText(), node.get("yearsOfStudy").asInt(), teacher));
+            }
+            students = session.createQuery("select s from Student s", Student.class).list();
         }
-        students = session.createQuery("select s from Student s", Student.class).list();
-        students.forEach(System.out::println);
         session.getTransaction().commit();
+        session.close();
     }
 
     public static void printQueries() {
@@ -142,10 +142,11 @@ public class Main {
         else if(type == 2){
             System.out.println("Choose which Teachers student you want to add:\n");
             teachers.values().forEach(System.out::println);
-            Integer id = scanner.nextInt();
+            Integer id = Integer.parseInt(scanner.nextLine());
             System.out.println("Enter Student data (name age gender instrument year_of_study)\n");
             String[] message = scanner.nextLine().split(" ");
-            Student s = new Student(message[0], Integer.parseInt(message[1]), message[2], message[3], Integer.parseInt(message[4]), teachers.get(id));
+            Teacher teacher = session.createQuery("select t from Teacher t where t.id = :id", Teacher.class).setParameter("id", id).uniqueResult();
+            Student s = new Student(message[0], Integer.parseInt(message[1]), message[2], message[3], Integer.parseInt(message[4]), teacher);
             session.persist(s);
             System.out.println("New student has been added! \n" +
                     s.toString());
@@ -164,15 +165,19 @@ public class Main {
                 """);
         int type = Integer.parseInt(scanner.nextLine());
         if(type == 1){
-            teachers.values().forEach(System.out::println);
+            session.createQuery("from Teacher t", Teacher.class).list().forEach(System.out::println);
             Integer id = Integer.parseInt(scanner.nextLine());
-            session.createQuery("delete from Teacher t where t.id = :id", Teacher.class).setParameter("id", id).executeUpdate();
+            session.createQuery("delete Teacher t where id = :id").setParameter("id", id).executeUpdate();
             System.out.println("Teacher has been deleted!");
         }else if(type == 2){
             students.forEach(System.out::println);
+            session.createQuery("from Student s", Student.class).list().forEach(System.out::println);
             Integer id = Integer.parseInt(scanner.nextLine());
-            session.createQuery("delete from Student s where s.id = :id", Student.class).setParameter("id", id).executeUpdate();
-            System.out.println("Student has been deleted!");
+            if(session.createQuery("delete Student s where id = :id").setParameter("id", id).executeUpdate() > 0){
+                System.out.println("Student has been deleted!");
+            }else{
+                System.out.println("ERROR: Student has not been deleted!");
+            }
         }
         session.getTransaction().commit();
         session.close();
@@ -224,16 +229,34 @@ public class Main {
             Teacher teach = session.createQuery("from Teacher t where t.id = :id", Teacher.class).setParameter("id", id).uniqueResult();
             System.out.println(teach.toString());
         }else if(id == 2){
-            //
+            System.out.println("Choose Student id: \n");
+            List<Student> stud = session.createQuery("from Student",Student.class).list();
+            stud.forEach(System.out::println);
+            id = Integer.parseInt(scanner.nextLine());
+            Student student = session.createQuery("from Student s where s.id = :id", Student.class).setParameter("id", id).uniqueResult();
+            System.out.println("""
+                    Enter field for update with new value
+                    name <value>
+                    age <value>
+                    gender <value>
+                    instrument <value>
+                    yearOfStudy <value>
+                    """);
+            String[] message = scanner.nextLine().split(" ");
+            Object value; //TODO fix this
+            if(message[0].equals("age") || message[0].equals("yearOfStudy") || message[0].equals("yearsOfWork")){
+                value = Integer.parseInt(message[1]);
+            }else{
+                value = message[1];
+            }
+            session.createQuery("update Student s set s."+message[0] +" = :val where s.id = :id").setParameter("id", id).setParameter("val",value).executeUpdate();
+            System.out.println("Student has been updated!");
         }
         session.getTransaction().commit();
         session.close();
     }
 
     public static void main(String[] args) {
-        type = Integer.parseInt(args[0]);
-        generateMessage(type);
-        Set<Student> students = chooseSet(type);
         try {
             initDatabase();
         } catch (IOException e) {
