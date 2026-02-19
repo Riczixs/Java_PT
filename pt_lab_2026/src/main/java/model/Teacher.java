@@ -2,7 +2,7 @@ package model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import mvc.TeacherId;
+import mvc.Id.TeacherId;
 
 import java.util.Comparator;
 import java.util.*;
@@ -13,8 +13,9 @@ import java.util.*;
 @Table(name = "teachers")
 @NoArgsConstructor
 public class Teacher implements Comparator<Teacher>, Comparable<Teacher>{
+
     @Id
-    @Column(columnDefinition = "id.id", )
+    @EmbeddedId
     private TeacherId id;
     private String name;
     private Integer age;
@@ -23,7 +24,8 @@ public class Teacher implements Comparator<Teacher>, Comparable<Teacher>{
     @Column(name="years_of_work")
     private Integer yearsOfWork;
 
-    public Teacher(String name, Integer age, String gender, String specialization, Integer yearsOfWork) {
+    public Teacher(int id, String name, Integer age, String gender, String specialization, Integer yearsOfWork) {
+        this.id = new TeacherId(id);
         this.name = name;
         this.age = age;
         this.gender = gender;
@@ -75,7 +77,7 @@ public class Teacher implements Comparator<Teacher>, Comparable<Teacher>{
     @Override
     public String toString() {
         return "Teacher{" +
-                "id=" + id +
+                "id=" + id.getId() +
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 ", gender='" + gender + '\'' +

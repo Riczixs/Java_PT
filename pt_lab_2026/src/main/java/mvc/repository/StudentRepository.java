@@ -1,7 +1,7 @@
-package mvc;
+package mvc.repository;
 
 import model.Student;
-import java.util.*;
+import mvc.Id.StudentId;
 
 public class StudentRepository extends Repository<Student, StudentId>{
 }

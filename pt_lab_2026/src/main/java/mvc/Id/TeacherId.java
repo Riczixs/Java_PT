@@ -1,7 +1,8 @@
-package mvc;
+package mvc.Id;
 
-import model.Teacher;
+import jakarta.persistence.Embeddable;
 
+@Embeddable
 public class TeacherId extends Id{
     public TeacherId(int id) {
         super(id);
