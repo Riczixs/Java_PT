@@ -2,6 +2,7 @@ package model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import mvc.TeacherId;
 
 import java.util.Comparator;
 import java.util.*;
@@ -13,8 +14,8 @@ import java.util.*;
 @NoArgsConstructor
 public class Teacher implements Comparator<Teacher>, Comparable<Teacher>{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(columnDefinition = "id.id", )
+    private TeacherId id;
     private String name;
     private Integer age;
     private String gender;
