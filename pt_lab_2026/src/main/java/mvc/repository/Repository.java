@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 public class Repository <T,V extends Id> {
     private final Map<V, T> collection = new HashMap<>();
 
-
     public Optional<T> save(T t, V v){ //TODO must be idempotent!!!
         if(t == null) return Optional.empty();
         if(collection.containsValue(t)){

@@ -40,6 +40,21 @@ public class TeacherController {
         return teacherRepository.findAll();
     }
 
+    public String updateTeacher(String teacherString, Integer id){
+        //id name age gender specialization yearsOfWork
+        String[] fields = teacherString.split(" ");
+        Teacher teacher = new Teacher(id, fields[0],Integer.parseInt(fields[1]),fields[2],fields[3],Integer.parseInt(fields[4]));
+        try{
+            Optional<Teacher> t =  teacherRepository.update(teacher, id);
+            if(t.isPresent()){
+                return t.get().toString();
+            }else{
+                return "empty";
+            }
+        }catch(IllegalArgumentException e){
+            return "bad request";
+        }
+    }
 
     public String deleteTeacher(int id){
         try{

@@ -1,4 +1,6 @@
 import model.Teacher;
+import mvc.repository.TeacherRepository;
+import org.assertj.core.api.Assertions;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -10,56 +12,21 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 public class HibernateExampleTests {
 
-    private SessionFactory sessionFactory;
-
+    TeacherRepository teacherRepository;
 
     @BeforeEach
-    protected void setUp() throws Exception {
-        final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-                .configure("hibernate.cfg.xml")
-                .build();
-        try {
-            sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
-        }catch (Exception e) {
-            StandardServiceRegistryBuilder.destroy(registry);
-        }
-    }
-
-    @AfterEach
-    protected void tearDown() throws Exception {
-        if (sessionFactory != null) {
-            sessionFactory.close();
-        }
+    void setUp() {
+        teacherRepository = new TeacherRepository();
+        Teacher t1 = new Teacher(1,"Andrzej",40, "male", "Saxophone", 15);
+        Teacher t2 = new Teacher(2, "Grzegorz", 35, "male", "Piano", 10);
+        teacherRepository.save(t1,t1.getId());
+        teacherRepository.save(t2,t2.getId());
     }
 
     @Test
-    public void should_fetch_all_teachers(){
-        try{
-            Session session = sessionFactory.openSession();
-            session.beginTransaction();
-            session.persist(new Teacher("Franek", 10, "woman", "Saxophone", 1));
-            session.persist(new Teacher("Rysiek", 21, "man", "Piano", 2));
-            List<Teacher> teachers = session.createQuery("from Teacher", Teacher.class).list();
-            teachers.forEach(System.out::println);
-            session.getTransaction().commit();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+    public void teacher_should_not_be_null(){
+        Teacher t = teacherRepository.findById(1).get();
+        Assertions.assertThat(t).isNull();
     }
-
-    @Test
-    public void save_test_object_to_db() {
-        Teacher teacher = new Teacher();
-        try(Session session = sessionFactory.openSession()){
-            session.beginTransaction();
-            session.persist(teacher);
-            session.getTransaction().commit();
-        }
-
-    }
-
-
-
-
 
 }

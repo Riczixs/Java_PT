@@ -12,6 +12,8 @@ import java.util.*;
 @Setter
 @Table(name = "teachers")
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Teacher implements Comparator<Teacher>, Comparable<Teacher>{
 
     @Id
